@@ -1,6 +1,6 @@
 track-changes
 --language=coffeescript
---node-version=6.11.2
+--node-version=6.17.1
 --acceptance-creds=aws
 --dependencies=mongo,redis
 --docker-repos=gcr.io/overleaf-ops
