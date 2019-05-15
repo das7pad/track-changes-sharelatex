@@ -20,16 +20,16 @@ module.exports =
 			pass: "password"
 	redis:
 		lock:
-			host: process.env["REDIS_HOST"] or "localhost"
-			port: process.env['REDIS_PORT'] or 6379
-			password: process.env["REDIS_PASSWORD"] or ""
+			port: process.env["LOCK_REDIS_PORT"] or process.env["REDIS_PORT"] or "6379"
+			host: process.env["LOCK_REDIS_HOST"] or process.env["REDIS_HOST"] or "localhost"
+			password: process.env["LOCK_REDIS_PASSWORD"] or process.env["REDIS_PASSWORD"] or ""
 			key_schema:
 				historyLock: ({doc_id}) -> "HistoryLock:{#{doc_id}}"
 				historyIndexLock: ({project_id}) -> "HistoryIndexLock:{#{project_id}}"
 		history:
-			host: process.env["REDIS_HOST"] or "localhost"
-			port: process.env['REDIS_PORT'] or 6379
-			password: process.env["REDIS_PASSWORD"] or ""
+			port: process.env["HISTORY_REDIS_PORT"] or process.env["REDIS_PORT"] or "6379"
+			host: process.env["HISTORY_REDIS_HOST"] or process.env["REDIS_HOST"] or "localhost"
+			password: process.env["HISTORY_REDIS_PASSWORD"] or process.env["REDIS_PASSWORD"] or ""
 			key_schema:
 				uncompressedHistoryOps: ({doc_id}) -> "UncompressedHistoryOps:{#{doc_id}}"
 				docsWithHistoryOps: ({project_id}) -> "DocsWithHistoryOps:{#{project_id}}"
