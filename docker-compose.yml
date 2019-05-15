@@ -1,7 +1,7 @@
 # This file was auto-generated, do not edit it directly.
 # Instead run bin/update_build_scripts from
 # https://github.com/das7pad/sharelatex-dev-env
-# Version: 2.4.1
+# Version: 3.0.0
 
 version: "3.1"
 
@@ -22,10 +22,9 @@ services:
       - .:/app
     working_dir: /app
     environment:
-      ELASTIC_SEARCH_DSN: es:9200
-      REDIS_HOST: redis
       MONGO_HOST: mongo
-      POSTGRES_HOST: postgres
+      HISTORY_REDIS_HOST: redis_history
+      LOCK_REDIS_HOST: redis_lock
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
       AWS_BUCKET: ${AWS_BUCKET}
@@ -33,7 +32,8 @@ services:
     user: node
     depends_on:
       - mongo
-      - redis
+      - redis_history
+      - redis_lock
     command: npm run test:acceptance
 
 
@@ -46,7 +46,9 @@ services:
     command: tar -czf /tmp/build/build.tar.gz --exclude=build.tar.gz --exclude-vcs .
     user: root
 
-  redis:
+  redis_history:
+    image: redis
+  redis_lock:
     image: redis
 
   mongo:
