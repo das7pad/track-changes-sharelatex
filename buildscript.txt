@@ -5,4 +5,4 @@ track-changes
 --dependencies=mongo,redis_history,redis_lock
 --docker-repos=gcr.io/overleaf-ops
 --build-target=docker
---script-version=3.0.0
+--script-version=3.1.0
