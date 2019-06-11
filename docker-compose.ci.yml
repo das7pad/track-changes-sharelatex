@@ -15,6 +15,7 @@ services:
     build: .
     image: ci/$PROJECT_NAME:$BRANCH_NAME-$BUILD_NUMBER
     environment:
+      LOG_LEVEL: fatal
       MONGO_HOST: mongo
       HISTORY_REDIS_HOST: redis_history
       LOCK_REDIS_HOST: redis_lock
