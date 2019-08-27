@@ -1,4 +1,5 @@
 express = require("express")
+bodyParser = require("body-parser")
 app = express()
 
 module.exports = MockDocUpdaterApi =
@@ -22,7 +23,7 @@ module.exports = MockDocUpdaterApi =
 				else
 					res.send JSON.stringify doc
 
-		app.post "/project/:project_id/doc/:doc_id", express.bodyParser(), (req, res, next) =>
+		app.post "/project/:project_id/doc/:doc_id", bodyParser(), (req, res, next) =>
 			@setDoc req.params.project_id, req.params.doc_id, req.body.lines, req.body.user_id, req.body.undoing, (errr, doc) ->
 				if error?
 					res.send 500
