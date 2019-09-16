@@ -5,7 +5,7 @@ logger = require "logger-sharelatex"
 TrackChangesLogger = logger.initialize("track-changes").logger
 
 if Settings.sentry?.dsn?
-	logger.initializeErrorReporting(Settings.sentry.dsn)
+	logger.initializeErrorReporting(Settings.sentry.dsn, Settings.sentry.options)
 
 # log updates as truncated strings
 truncateFn = (updates) ->

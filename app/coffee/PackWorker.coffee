@@ -8,7 +8,7 @@ Metrics.initialize("track-changes")
 logger = require "logger-sharelatex"
 logger.initialize("track-changes-packworker")
 if Settings.sentry?.dsn?
-	logger.initializeErrorReporting(Settings.sentry.dsn)
+	logger.initializeErrorReporting(Settings.sentry.dsn, Settings.sentry.options)
 
 DAYS = 24 * 3600 * 1000
 
