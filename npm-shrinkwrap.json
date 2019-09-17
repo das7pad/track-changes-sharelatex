@@ -2045,11 +2045,6 @@
         "util-deprecate": "~1.0.1"
       }
     },
-    "redis": {
-      "version": "0.10.3",
-      "resolved": "https://registry.npmjs.org/redis/-/redis-0.10.3.tgz",
-      "integrity": "sha1-iSf+IRDuOWF7zz/Te4nY4SORG7Y="
-    },
     "redis-commands": {
       "version": "1.5.0",
       "resolved": "https://registry.npmjs.org/redis-commands/-/redis-commands-1.5.0.tgz",

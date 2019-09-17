@@ -1,5 +1,5 @@
 request = require "request"
-rclient = require("redis").createClient()
+rclient = require("redis-sharelatex").createClient()
 async = require "async"
 {ObjectId} = require("./app/js/mongojs")
 

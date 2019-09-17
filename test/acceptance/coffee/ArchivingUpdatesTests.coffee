@@ -7,7 +7,6 @@ db = mongojs.db
 ObjectId = mongojs.ObjectId
 Settings = require "settings-sharelatex"
 request = require "request"
-rclient = require("redis").createClient(Settings.redis.history) # Only works locally for now
 
 TrackChangesApp = require "./helpers/TrackChangesApp"
 TrackChangesClient = require "./helpers/TrackChangesClient"

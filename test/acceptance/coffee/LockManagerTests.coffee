@@ -6,7 +6,6 @@ mongojs = require "../../../app/js/mongojs"
 ObjectId = mongojs.ObjectId
 Settings = require "settings-sharelatex"
 LockManager = require "../../../app/js/LockManager"
-rclient = require("redis").createClient(Settings.redis.history) # Only works locally for now
 TrackChangesApp = require "./helpers/TrackChangesApp"
 
 describe "Locking document", ->

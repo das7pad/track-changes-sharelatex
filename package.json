@@ -34,7 +34,6 @@
     "metrics-sharelatex": "^2.2.0",
     "mongo-uri": "^0.1.2",
     "mongojs": "2.4.0",
-    "redis": "~0.10.1",
     "redis-sharelatex": "git+https://github.com/das7pad/redis-sharelatex.git#760b9345258a843000b544e3d1c36aa8f16b2033",
     "request": "^2.88.0",
     "requestretry": "^1.12.0",
