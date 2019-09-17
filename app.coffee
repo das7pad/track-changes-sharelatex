@@ -7,6 +7,11 @@ TrackChangesLogger = logger.initialize("track-changes").logger
 if Settings.sentry?.dsn?
 	logger.initializeErrorReporting(Settings.sentry.dsn, Settings.sentry.options)
 
+if Settings.catchErrors
+	process.removeAllListeners "uncaughtException"
+	process.on "uncaughtException", (error) ->
+		logger.error err: error, "uncaughtException"
+
 # log updates as truncated strings
 truncateFn = (updates) ->
 		JSON.parse(
