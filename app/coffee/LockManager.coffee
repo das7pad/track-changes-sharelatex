@@ -22,7 +22,7 @@ module.exports = LockManager =
 		time = Date.now()
 		return "locked:host=#{HOST}:pid=#{PID}:random=#{RND}:time=#{time}:count=#{COUNT++}"
 
-	unlockScript: 'if redis.call("get", KEYS[1]) == ARGV[1] then return redis.call("del", KEYS[1]) else return 0 end';
+	unlockScript: 'if redis.call("get", KEYS[1]) == ARGV[1] then return redis.call("del", KEYS[1]) else return 0 end'
 
 	tryLock : (key, callback = (err, gotLock) ->) ->
 		lockValue = LockManager.randomLock()
