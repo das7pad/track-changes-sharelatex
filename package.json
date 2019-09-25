@@ -30,7 +30,7 @@
     "express": "^4.17.1",
     "heap": "^0.2.6",
     "line-reader": "^0.2.4",
-    "logger-sharelatex": "^1.7.0",
+    "logger-sharelatex": "git+https://github.com/das7pad/logger-sharelatex.git#0a27a2785df04b627bb3557f01ac6e7573a97c61",
     "metrics-sharelatex": "^2.2.0",
     "mongo-uri": "^0.1.2",
     "mongojs": "2.4.0",
