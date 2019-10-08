@@ -16,8 +16,8 @@ module.exports =
 			url: "http://#{process.env["DOCSTORE_HOST"] or "localhost"}:3016"
 		web:
 			url: "http://#{process.env['WEB_API_HOST'] or process.env['WEB_HOST'] or "localhost"}:#{process.env['WEB_API_PORT'] or process.env['WEB_PORT'] or 3000}"
-			user: "sharelatex"
-			pass: "password"
+			user: process.env['WEB_API_USER'] or "sharelatex"
+			pass: process.env['WEB_API_PASSWORD'] or "password"
 	redis:
 		lock:
 			port: process.env["LOCK_REDIS_PORT"] or process.env["REDIS_PORT"] or "6379"
@@ -40,6 +40,7 @@ module.exports =
 			secret: process.env['AWS_SECRET_ACCESS_KEY']
 		stores:
 			doc_history: process.env['AWS_BUCKET']
+		continueOnError: process.env['TRACK_CHANGES_CONTINUE_ON_ERROR'] or false
 			
 	path:
 		dumpFolder:   Path.join(TMP_DIR, "dumpFolder")
