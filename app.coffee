@@ -87,7 +87,7 @@ app.get "/health_check",  HttpController.healthCheck
 
 app.use (error, req, res, next) ->
 	logger.error err: error, req: req, "an internal error occured"
-	res.send 500
+	res.sendStatus 500
 
 port = Settings.internal?.trackchanges?.port or 3015
 host = Settings.internal?.trackchanges?.host or "localhost"

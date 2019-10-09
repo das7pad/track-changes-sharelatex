@@ -16,18 +16,18 @@ module.exports = MockWebApi =
 		app.get "/user/:user_id/personal_info", (req, res, next) =>
 			@getUserInfo req.params.user_id, (error, user) ->
 				if error?
-					res.send 500
+					res.sendStatus 500
 				if !user?
-					res.send 404
+					res.sendStatus 404
 				else
 					res.send JSON.stringify user
 
 		app.get "/project/:project_id/details", (req, res, next) =>
 			@getProjectDetails req.params.project_id, (error, project) ->
 				if error?
-					res.send 500
+					res.sendStatus 500
 				if !project?
-					res.send 404
+					res.sendStatus 404
 				else
 					res.send JSON.stringify project
 

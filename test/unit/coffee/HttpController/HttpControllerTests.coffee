@@ -28,7 +28,7 @@ describe "HttpController", ->
 					doc_id: @doc_id
 					project_id: @project_id
 			@res =
-				send: sinon.stub()
+				sendStatus: sinon.stub()
 			@UpdatesManager.processUncompressedUpdatesWithLock = sinon.stub().callsArg(2)
 			@HttpController.flushDoc @req, @res, @next
 
@@ -38,7 +38,7 @@ describe "HttpController", ->
 				.should.equal true
 
 		it "should return a success code", ->
-			@res.send.calledWith(204).should.equal true
+			@res.sendStatus.calledWith(204).should.equal true
 
 	describe "flushProject", ->
 		beforeEach ->
@@ -46,7 +46,7 @@ describe "HttpController", ->
 				params:
 					project_id: @project_id
 			@res =
-				send: sinon.stub()
+				sendStatus: sinon.stub()
 			@UpdatesManager.processUncompressedUpdatesForProject = sinon.stub().callsArg(1)
 			@HttpController.flushProject @req, @res, @next
 
@@ -56,7 +56,7 @@ describe "HttpController", ->
 				.should.equal true
 
 		it "should return a success code", ->
-			@res.send.calledWith(204).should.equal true
+			@res.sendStatus.calledWith(204).should.equal true
 
 
 	describe "getDiff", ->
@@ -120,7 +120,7 @@ describe "HttpController", ->
 				headers:
 					"x-user-id": @user_id
 			@res =
-				send: sinon.stub()
+				sendStatus: sinon.stub()
 
 			@RestoreManager.restoreToBeforeVersion = sinon.stub().callsArg(4)
 			@HttpController.restore @req, @res, @next
@@ -131,5 +131,5 @@ describe "HttpController", ->
 				.should.equal true
 
 		it "should return a success code", ->
-			@res.send.calledWith(204).should.equal true
+			@res.sendStatus.calledWith(204).should.equal true
 

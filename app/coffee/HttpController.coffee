@@ -13,14 +13,14 @@ module.exports = HttpController =
 		logger.log project_id: project_id, doc_id: doc_id, "compressing doc history"
 		UpdatesManager.processUncompressedUpdatesWithLock project_id, doc_id, (error) ->
 			return next(error) if error?
-			res.send 204
+			res.sendStatus 204
 
 	flushProject: (req, res, next = (error) ->) ->
 		project_id = req.params.project_id
 		logger.log project_id: project_id, "compressing project history"
 		UpdatesManager.processUncompressedUpdatesForProject project_id, (error) ->
 			return next(error) if error?
-			res.send 204
+			res.sendStatus 204
 
 	flushAll: (req, res, next = (error) ->) ->
 		# limit on projects to flush or -1 for all (default)
@@ -61,7 +61,7 @@ module.exports = HttpController =
 			if broken.length > 0
 				res.send broken
 			else
-				res.send 204
+				res.sendStatus 204
 
 	getDiff: (req, res, next = (error) ->) ->
 		doc_id = req.params.doc_id
@@ -102,7 +102,7 @@ module.exports = HttpController =
 		version = parseInt(version, 10)
 		RestoreManager.restoreToBeforeVersion project_id, doc_id, version, user_id, (error) ->
 			return next(error) if error?
-			res.send 204
+			res.sendStatus 204
 
 	pushDocHistory: (req, res, next = (error) ->) ->
 		project_id = req.params.project_id
@@ -110,7 +110,7 @@ module.exports = HttpController =
 		logger.log {project_id, doc_id}, "pushing all finalised changes to s3"
 		PackManager.pushOldPacks project_id, doc_id, (error) ->
 			return next(error) if error?
-			res.send 204
+			res.sendStatus 204
 
 	pullDocHistory: (req, res, next = (error) ->) ->
 		project_id = req.params.project_id
@@ -118,20 +118,20 @@ module.exports = HttpController =
 		logger.log {project_id, doc_id}, "pulling all packs from s3"
 		PackManager.pullOldPacks project_id, doc_id, (error) ->
 			return next(error) if error?
-			res.send 204
+			res.sendStatus 204
 
 	healthCheck: (req, res)->
 		HealthChecker.check (err)->
 			if err?
 				logger.err err:err, "error performing health check"
-				res.send 500
+				res.sendStatus 500
 			else
-				res.send 200
+				res.sendStatus 200
 
 	checkLock: (req, res)->
 		HealthChecker.checkLock (err) ->
 			if err?
 				logger.err err:err, "error performing lock check"
-				res.send 500
+				res.sendStatus 500
 			else
-				res.send 200
+				res.sendStatus 200

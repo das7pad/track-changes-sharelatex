@@ -11,9 +11,9 @@ module.exports = MockDocUpdaterApi =
 		app.get "/project/:project_id/doc", (req, res, next) =>
 			@getAllDoc req.params.project_id, (error, docs) ->
 				if error?
-					res.send 500
+					res.sendStatus 500
 				if !docs?
-					res.send 404
+					res.sendStatus 404
 				else
 					res.send JSON.stringify docs
 

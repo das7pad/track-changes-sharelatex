@@ -17,18 +17,18 @@ module.exports = MockDocUpdaterApi =
 		app.get "/project/:project_id/doc/:doc_id", (req, res, next) =>
 			@getDoc req.params.project_id, req.params.doc_id, (error, doc) ->
 				if error?
-					res.send 500
+					res.sendStatus 500
 				if !doc?
-					res.send 404
+					res.sendStatus 404
 				else
 					res.send JSON.stringify doc
 
 		app.post "/project/:project_id/doc/:doc_id", bodyParser(), (req, res, next) =>
 			@setDoc req.params.project_id, req.params.doc_id, req.body.lines, req.body.user_id, req.body.undoing, (errr, doc) ->
 				if error?
-					res.send 500
+					res.sendStatus 500
 				else
-					res.send 204
+					res.sendStatus 204
 
 		app.listen 3003, (error) ->
 			throw error if error?
