@@ -27,9 +27,9 @@ module.exports =
 				historyLock: ({doc_id}) -> "HistoryLock:{#{doc_id}}"
 				historyIndexLock: ({project_id}) -> "HistoryIndexLock:{#{project_id}}"
 		history:
-			port: process.env["HISTORY_REDIS_PORT"] or process.env["REDIS_PORT"] or "6379"
-			host: process.env["HISTORY_REDIS_HOST"] or process.env["REDIS_HOST"] or "localhost"
-			password: process.env["HISTORY_REDIS_PASSWORD"] or process.env["REDIS_PASSWORD"] or ""
+			port: process.env["DOC_UPDATER_REDIS_PORT"] or process.env["REDIS_PORT"] or "6379"
+			host: process.env["DOC_UPDATER_REDIS_HOST"] or process.env["REDIS_HOST"] or "localhost"
+			password: process.env["DOC_UPDATER_REDIS_PASSWORD"] or process.env["REDIS_PASSWORD"] or ""
 			key_schema:
 				uncompressedHistoryOps: ({doc_id}) -> "UncompressedHistoryOps:{#{doc_id}}"
 				docsWithHistoryOps: ({project_id}) -> "DocsWithHistoryOps:{#{project_id}}"
