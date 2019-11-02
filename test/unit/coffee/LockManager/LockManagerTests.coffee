@@ -16,6 +16,7 @@ describe "LockManager", ->
 					auth: sinon.stub()
 			"settings-sharelatex": @Settings
 			"logger-sharelatex": {error: ->}
+		, globals: {process}
 
 		@key = "lock-key"
 		@callback = sinon.stub()
