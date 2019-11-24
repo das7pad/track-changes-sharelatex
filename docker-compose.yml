@@ -23,7 +23,7 @@ services:
     environment:
       LOG_LEVEL: fatal
       MONGO_HOST: mongo
-      HISTORY_REDIS_HOST: redis_history
+      DOC_UPDATER_REDIS_HOST: redis_documentupdater
       LOCK_REDIS_HOST: redis_lock
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
@@ -32,7 +32,7 @@ services:
     user: node
     depends_on:
       - mongo
-      - redis_history
+      - redis_documentupdater
       - redis_lock
     command: npm run test:acceptance
 
@@ -44,7 +44,7 @@ services:
     command: tar -czf /tmp/build/build.tar.gz --exclude=build.tar.gz --exclude-vcs .
     user: root
 
-  redis_history:
+  redis_documentupdater:
     image: redis
   redis_lock:
     image: redis
