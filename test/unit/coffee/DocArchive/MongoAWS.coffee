@@ -4,11 +4,16 @@ sinon = require("sinon")
 modulePath = "../../../../app/js/MongoAWS.js"
 SandboxedModule = require('sandboxed-module')
 {ObjectId} = require("mongojs")
-MemoryStream = require('memorystream')
 zlib = require "zlib"
 
 describe "MongoAWS", ->
 	beforeEach ->
+		@s3 =
+			getObject: sinon.stub()
+			putObject: sinon.stub()
+		@awssdk =
+			S3: sinon.stub().returns @s3
+
 		@MongoAWS = SandboxedModule.require modulePath, requires:
 			"settings-sharelatex": @settings =
 				trackchanges:
@@ -20,9 +25,8 @@ describe "MongoAWS", ->
 			"child_process": @child_process = {}
 			"mongo-uri": @mongouri = {}
 			"logger-sharelatex": @logger = {log: sinon.stub(), error: sinon.stub(), err:->}
-			"aws-sdk": @awssdk = {}
+			"aws-sdk": @awssdk
 			"fs": @fs = {}
-			"s3-streams": @S3S = {}
 			"./mongojs" : { db: @db = {}, ObjectId: ObjectId }
 			"JSONStream": @JSONStream = {}
 			"readline-stream": @readline = sinon.stub()
@@ -37,10 +41,7 @@ describe "MongoAWS", ->
 	describe "archivePack", ->
 
 		beforeEach (done) ->
-			@awssdk.config = { update: sinon.stub() }
-			@awssdk.S3 = sinon.stub()
-			@S3S.WriteStream = () ->
-				MemoryStream.createWriteStream()
+			@s3.putObject = sinon.stub().callsArgWith(1, null)
 			@db.docHistory = {}
 			@db.docHistory.findOne = sinon.stub().callsArgWith(1, null, {"pack":"hello"})
 
@@ -55,10 +56,8 @@ describe "MongoAWS", ->
 
 		beforeEach (done) ->
 			zlib.gzip '{"pack":"123"}', (err, zbuf) =>
-				@awssdk.config = { update: sinon.stub() }
-				@awssdk.S3 = sinon.stub()
-				@S3S.ReadStream = () ->
-					MemoryStream.createReadStream(zbuf, {readable:true})
+
+				@s3.getObject = sinon.stub().callsArgWith(1, null, {Body: zbuf})
 				@db.docHistory = {}
 				@db.docHistory.insert = sinon.stub().callsArgWith(1, null, "pack")
 
