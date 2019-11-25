@@ -7,14 +7,21 @@ BRANCH_NAME ?= $(shell git rev-parse --abbrev-ref HEAD)
 COMMIT ?= $(shell git rev-parse HEAD)
 RELEASE ?= $(shell git describe --tags | sed 's/-g/+/;s/^v//')
 PROJECT_NAME = track-changes
+S3_ENDPOINT ?= http://minio:9000
+S3_FORCE_PATH_STYLE ?= true
+AWS_KEY ?= $(shell openssl rand -hex 20)
+AWS_SECRET ?= $(shell openssl rand -hex 20)
+AWS_BUCKET ?= bucket
 DOCKER_COMPOSE_FLAGS ?= -f docker-compose.yml
 DOCKER_COMPOSE := BUILD_NUMBER=$(BUILD_NUMBER) \
 	BRANCH_NAME=$(BRANCH_NAME) \
 	PROJECT_NAME=$(PROJECT_NAME) \
 	MOCHA_GREP=${MOCHA_GREP} \
-	AWS_BUCKET=${AWS_BUCKET} \
-	AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
-	AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
+	S3_ENDPOINT=$(S3_ENDPOINT) \
+	S3_FORCE_PATH_STYLE=$(S3_FORCE_PATH_STYLE) \
+	AWS_KEY=$(AWS_KEY) \
+	AWS_SECRET=$(AWS_SECRET) \
+	AWS_BUCKET=$(AWS_BUCKET) \
 	docker-compose ${DOCKER_COMPOSE_FLAGS}
 
 clean_ci: clean
@@ -53,6 +60,7 @@ test_clean:
 	$(DOCKER_COMPOSE) down -v -t 0
 
 test_acceptance_pre_run:
+	$(DOCKER_COMPOSE) up -d minio_setup minio
 
 COFFEE := npx coffee --map
 
