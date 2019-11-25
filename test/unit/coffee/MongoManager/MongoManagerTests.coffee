@@ -3,7 +3,6 @@ chai = require('chai')
 should = chai.should()
 expect = chai.expect
 modulePath = "../../../../app/js/MongoManager.js"
-packModulePath = "../../../../app/js/PackManager.js"
 SandboxedModule = require('sandboxed-module')
 {ObjectId} = require("mongojs")
 tk = require "timekeeper"

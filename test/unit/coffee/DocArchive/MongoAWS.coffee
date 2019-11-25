@@ -23,13 +23,10 @@ describe "MongoAWS", ->
 					stores:
 						doc_history: "s3-bucket"
 			"child_process": @child_process = {}
-			"mongo-uri": @mongouri = {}
 			"logger-sharelatex": @logger = {log: sinon.stub(), error: sinon.stub(), err:->}
 			"aws-sdk": @awssdk
 			"fs": @fs = {}
 			"./mongojs" : { db: @db = {}, ObjectId: ObjectId }
-			"JSONStream": @JSONStream = {}
-			"readline-stream": @readline = sinon.stub()
 			'metrics-sharelatex': {inc: ()->}
 
 		@project_id = ObjectId().toString()

@@ -1,7 +1,7 @@
 Settings = require "settings-sharelatex"
 async = require "async"
 _ = require "underscore"
-{db, ObjectId, BSON} = require "./mongojs"
+{db, ObjectId} = require "./mongojs"
 fs = require "fs"
 Metrics = require "metrics-sharelatex"
 Metrics.initialize("track-changes")

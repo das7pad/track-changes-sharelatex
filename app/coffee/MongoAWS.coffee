@@ -2,8 +2,6 @@ settings = require "settings-sharelatex"
 logger = require "logger-sharelatex"
 AWS = require 'aws-sdk'
 {db, ObjectId} = require "./mongojs"
-JSONStream = require "JSONStream"
-ReadlineStream = require "byline"
 zlib = require "zlib"
 Metrics = require "metrics-sharelatex"
 
