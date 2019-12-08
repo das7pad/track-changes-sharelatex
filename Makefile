@@ -130,6 +130,7 @@ build_prod: clean_build_artifacts
 			--gzip \
 			app.js \
 			app/js \
+			app/lib \
 			config \
 		> build_artifacts.tar.gz
 
