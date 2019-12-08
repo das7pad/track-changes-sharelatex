@@ -24,7 +24,6 @@
     "aws-sdk": "^2.102.0",
     "body-parser": "^1.19.0",
     "bson": "^0.4.20",
-    "cli": "^1.0.1",
     "express": "^4.17.1",
     "heap": "^0.2.6",
     "logger-sharelatex": "git+https://github.com/das7pad/logger-sharelatex.git#c9e043041b1f6a4c76ce36a3642cef64483e99f3",
@@ -38,6 +37,7 @@
   },
   "devDependencies": {
     "chai": "~4.1.1",
+    "cli": "^1.0.1",
     "coffee-script": "^1.7.1",
     "mocha": "^4.0.1",
     "sandboxed-module": "~0.3.0",
