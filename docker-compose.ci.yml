@@ -37,6 +37,7 @@ services:
       MOCHA_GREP: ${MOCHA_GREP}
     depends_on:
       - minio
+      - minio_setup
       - mongo
       - redis_documentupdater
       - redis_lock

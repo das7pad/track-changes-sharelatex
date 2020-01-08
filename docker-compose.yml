@@ -34,6 +34,7 @@ services:
     user: node
     depends_on:
       - minio
+      - minio_setup
       - mongo
       - redis_documentupdater
       - redis_lock
