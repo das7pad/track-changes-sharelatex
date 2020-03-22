@@ -25,10 +25,10 @@ services:
       MONGO_HOST: mongo
       DOC_UPDATER_REDIS_HOST: redis_documentupdater
       LOCK_REDIS_HOST: redis_lock
-      S3_ENDPOINT: ${S3_ENDPOINT}
-      S3_FORCE_PATH_STYLE: ${S3_FORCE_PATH_STYLE}
-      AWS_KEY: ${AWS_KEY}
-      AWS_SECRET: ${AWS_SECRET}
+      AWS_S3_ENDPOINT: ${AWS_S3_ENDPOINT}
+      AWS_S3_FORCE_PATH_STYLE: ${AWS_S3_FORCE_PATH_STYLE}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
       AWS_BUCKET: ${AWS_BUCKET}
       MOCHA_GREP: ${MOCHA_GREP}
     user: node
@@ -45,8 +45,8 @@ services:
     command: server /data
     environment:
       MINIO_BROWSER: 'off'
-      MINIO_ACCESS_KEY: ${AWS_KEY}
-      MINIO_SECRET_KEY: ${AWS_SECRET}
+      MINIO_ACCESS_KEY: ${AWS_ACCESS_KEY_ID}
+      MINIO_SECRET_KEY: ${AWS_SECRET_ACCESS_KEY}
 
   minio_setup:
     image: minio/mc
@@ -55,9 +55,8 @@ services:
       - -c
       - >
         sleep 2
-        && mc config host add minio http://minio:9000 ${AWS_KEY} ${AWS_SECRET}
+        && mc config host add minio http://minio:9000 ${AWS_ACCESS_KEY_ID} ${AWS_SECRET_ACCESS_KEY}
         && mc mb --ignore-existing minio/${AWS_BUCKET}
-        && mc admin trace minio
     depends_on:
       - minio
 

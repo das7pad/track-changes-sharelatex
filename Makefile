@@ -2,26 +2,33 @@
 # Instead run bin/update_build_scripts from
 # https://github.com/das7pad/sharelatex-dev-env
 
+ifneq (,$(wildcard .git))
+git = git
+else
+# we are in docker, without the .git directory
+git = sh -c 'false'
+endif
+
 BUILD_NUMBER ?= local
-BRANCH_NAME ?= $(shell git rev-parse --abbrev-ref HEAD)
-COMMIT ?= $(shell git rev-parse HEAD)
-RELEASE ?= $(shell git describe --tags | sed 's/-g/+/;s/^v//')
+BRANCH_NAME ?= $(shell $(git) rev-parse --abbrev-ref HEAD || echo master)
+COMMIT ?= $(shell $(git) rev-parse HEAD || echo HEAD)
+RELEASE ?= $(shell $(git) describe --tags || echo v0.0.0 | sed 's/-g/+/;s/^v//')
 PROJECT_NAME = track-changes
 BUILD_DIR_NAME = $(shell pwd | xargs basename | tr -cd '[a-zA-Z0-9_.\-]')
-S3_ENDPOINT ?= http://minio:9000
-S3_FORCE_PATH_STYLE ?= true
-AWS_KEY ?= $(shell openssl rand -hex 20)
-AWS_SECRET ?= $(shell openssl rand -hex 20)
+AWS_S3_ENDPOINT ?= http://minio:9000
+AWS_S3_FORCE_PATH_STYLE ?= true
+AWS_ACCESS_KEY_ID ?= $(shell openssl rand -hex 20)
+AWS_SECRET_ACCESS_KEY ?= $(shell openssl rand -hex 20)
 AWS_BUCKET ?= bucket
 DOCKER_COMPOSE_FLAGS ?= -f docker-compose.yml
 DOCKER_COMPOSE := BUILD_NUMBER=$(BUILD_NUMBER) \
 	BRANCH_NAME=$(BRANCH_NAME) \
 	PROJECT_NAME=$(PROJECT_NAME) \
 	MOCHA_GREP=${MOCHA_GREP} \
-	S3_ENDPOINT=$(S3_ENDPOINT) \
-	S3_FORCE_PATH_STYLE=$(S3_FORCE_PATH_STYLE) \
-	AWS_KEY=$(AWS_KEY) \
-	AWS_SECRET=$(AWS_SECRET) \
+	AWS_S3_ENDPOINT=$(AWS_S3_ENDPOINT) \
+	AWS_S3_FORCE_PATH_STYLE=$(AWS_S3_FORCE_PATH_STYLE) \
+	AWS_ACCESS_KEY_ID=$(AWS_ACCESS_KEY_ID) \
+	AWS_SECRET_ACCESS_KEY=$(AWS_SECRET_ACCESS_KEY) \
 	AWS_BUCKET=$(AWS_BUCKET) \
 	docker-compose ${DOCKER_COMPOSE_FLAGS}
 
@@ -32,9 +39,11 @@ clean_build:
 	docker rmi \
 		ci/$(PROJECT_NAME):$(BRANCH_NAME)-$(BUILD_NUMBER) \
 		ci/$(PROJECT_NAME):$(BRANCH_NAME)-$(BUILD_NUMBER)-base \
+		ci/$(PROJECT_NAME):$(BRANCH_NAME)-$(BUILD_NUMBER)-dev-deps \
 		ci/$(PROJECT_NAME):$(BRANCH_NAME)-$(BUILD_NUMBER)-dev \
 		ci/$(PROJECT_NAME):$(BRANCH_NAME)-$(BUILD_NUMBER)-prod \
-		ci/$(PROJECT_NAME):$(BRANCH_NAME)-$(BUILD_NUMBER)-cache \
+		ci/$(PROJECT_NAME):$(BRANCH_NAME)-$(BUILD_NUMBER)-dev-deps-cache \
+		ci/$(PROJECT_NAME):$(BRANCH_NAME)-$(BUILD_NUMBER)-prod-cache \
 		--force
 
 clean:
@@ -49,6 +58,8 @@ clean:
 
 test: lint
 lint:
+test: format
+format:
 
 UNIT_TEST_DOCKER_COMPOSE ?= \
 	COMPOSE_PROJECT_NAME=unit_test_$(BUILD_DIR_NAME) $(DOCKER_COMPOSE)
@@ -75,7 +86,7 @@ test_acceptance_app_run:
 
 test_acceptance_app_run: test_acceptance_pre_run
 test_acceptance_pre_run:
-	$(ACCEPTANCE_TEST_DOCKER_COMPOSE) up -d minio_setup minio
+	$(ACCEPTANCE_TEST_DOCKER_COMPOSE) up minio_setup
 
 clean_ci: clean_test_acceptance
 clean_test_acceptance: clean_test_acceptance_app
@@ -126,19 +137,32 @@ test/unit/js/%.js: test/unit/coffee/%.coffee
 
 build: clean_build_artifacts
 	docker build \
-		--cache-from ci/$(PROJECT_NAME):$(BRANCH_NAME)-$(BUILD_NUMBER)-cache \
+		--cache-from ci/$(PROJECT_NAME):$(BRANCH_NAME)-$(BUILD_NUMBER)-dev-deps-cache \
 		--tag ci/$(PROJECT_NAME):$(BRANCH_NAME)-$(BUILD_NUMBER)-base \
 		--target base \
 		.
 
 	docker build \
 		--cache-from ci/$(PROJECT_NAME):$(BRANCH_NAME)-$(BUILD_NUMBER)-base \
+		--cache-from ci/$(PROJECT_NAME):$(BRANCH_NAME)-$(BUILD_NUMBER)-dev-deps-cache \
+		--tag ci/$(PROJECT_NAME):$(BRANCH_NAME)-$(BUILD_NUMBER)-dev-deps \
+		--target dev-deps \
+		.
+
+	docker build \
+		--cache-from ci/$(PROJECT_NAME):$(BRANCH_NAME)-$(BUILD_NUMBER)-dev-deps \
 		--tag ci/$(PROJECT_NAME):$(BRANCH_NAME)-$(BUILD_NUMBER) \
 		--tag ci/$(PROJECT_NAME):$(BRANCH_NAME)-$(BUILD_NUMBER)-dev \
 		--target dev \
 		.
 
 build_prod: clean_build_artifacts
+	docker build \
+		--cache-from ci/$(PROJECT_NAME):$(BRANCH_NAME)-$(BUILD_NUMBER)-dev \
+		--tag ci/$(PROJECT_NAME):$(BRANCH_NAME)-$(BUILD_NUMBER)-base \
+		--target base \
+		.
+
 	docker run \
 		--rm \
 		--entrypoint tar \
@@ -155,7 +179,8 @@ build_prod: clean_build_artifacts
 		--build-arg RELEASE=$(RELEASE) \
 		--build-arg COMMIT=$(COMMIT) \
 		--build-arg BASE=ci/$(PROJECT_NAME):$(BRANCH_NAME)-$(BUILD_NUMBER)-base \
-		--cache-from ci/$(PROJECT_NAME):$(BRANCH_NAME)-$(BUILD_NUMBER)-cache \
+		--cache-from ci/$(PROJECT_NAME):$(BRANCH_NAME)-$(BUILD_NUMBER)-base \
+		--cache-from ci/$(PROJECT_NAME):$(BRANCH_NAME)-$(BUILD_NUMBER)-prod-cache \
 		--tag ci/$(PROJECT_NAME):$(BRANCH_NAME)-$(BUILD_NUMBER)-prod \
 		--file=Dockerfile.production \
 		.
