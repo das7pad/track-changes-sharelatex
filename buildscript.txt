@@ -1,7 +1,4 @@
 track-changes
 --language=coffeescript
 --node-version=12.16.1
---acceptance-creds=None
 --dependencies=minio,mongo,redis_documentupdater,redis_lock
---docker-repos=gcr.io/overleaf-ops
---build-target=docker
