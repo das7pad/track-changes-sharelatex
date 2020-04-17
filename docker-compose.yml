@@ -42,6 +42,7 @@ services:
 
   minio:
     image: minio/minio
+    tmpfs: /data
     command: server /data
     environment:
       MINIO_BROWSER: 'off'
@@ -62,9 +63,12 @@ services:
 
   mongo:
     image: mongo
+    tmpfs: /data
 
   redis_documentupdater:
     image: redis
+    tmpfs: /data
 
   redis_lock:
     image: redis
+    tmpfs: /data
