@@ -16,7 +16,7 @@ RELEASE ?= $(shell $(git) describe --tags || echo v0.0.0 | sed 's/-g/+/;s/^v//')
 PROJECT_NAME = track-changes
 BUILD_DIR_NAME = $(shell pwd | xargs basename | tr -cd '[a-zA-Z0-9_.\-]')
 AWS_S3_ENDPOINT ?= http://minio:9000
-AWS_S3_FORCE_PATH_STYLE ?= true
+AWS_S3_PATH_STYLE ?= true
 AWS_ACCESS_KEY_ID ?= $(shell openssl rand -hex 20)
 AWS_SECRET_ACCESS_KEY ?= $(shell openssl rand -hex 20)
 AWS_BUCKET ?= bucket
@@ -26,7 +26,7 @@ DOCKER_COMPOSE := BUILD_NUMBER=$(BUILD_NUMBER) \
 	PROJECT_NAME=$(PROJECT_NAME) \
 	MOCHA_GREP=${MOCHA_GREP} \
 	AWS_S3_ENDPOINT=$(AWS_S3_ENDPOINT) \
-	AWS_S3_FORCE_PATH_STYLE=$(AWS_S3_FORCE_PATH_STYLE) \
+	AWS_S3_PATH_STYLE=$(AWS_S3_PATH_STYLE) \
 	AWS_ACCESS_KEY_ID=$(AWS_ACCESS_KEY_ID) \
 	AWS_SECRET_ACCESS_KEY=$(AWS_SECRET_ACCESS_KEY) \
 	AWS_BUCKET=$(AWS_BUCKET) \

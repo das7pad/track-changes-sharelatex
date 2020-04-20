@@ -39,7 +39,7 @@ module.exports =
 			key: process.env['AWS_ACCESS_KEY_ID'] || process.env['AWS_KEY']
 			secret: process.env['AWS_SECRET_ACCESS_KEY'] || process.env['AWS_SECRET']
 			endpoint: process.env['AWS_S3_ENDPOINT']
-			forcePathStyle: process.env['AWS_S3_FORCE_PATH_STYLE'] == 'true'
+			forcePathStyle: process.env['AWS_S3_PATH_STYLE'] == 'true'
 		stores:
 			doc_history: process.env['AWS_BUCKET']
 		continueOnError: process.env['TRACK_CHANGES_CONTINUE_ON_ERROR'] or false
