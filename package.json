@@ -27,7 +27,7 @@
     "express": "^4.17.1",
     "heap": "^0.2.6",
     "logger-sharelatex": "git+https://github.com/das7pad/logger-sharelatex.git#bef2078daae2433a43e61db306e301398199daa0",
-    "metrics-sharelatex": "git+https://github.com/das7pad/metrics-sharelatex.git#3aa1de4fba521fc0e7969e619dec8f169f0d889f",
+    "metrics-sharelatex": "git+https://github.com/das7pad/metrics-sharelatex.git#471b0a35d8125818393738cb95702367add6d203",
     "mongojs": "2.4.0",
     "redis-sharelatex": "git+https://github.com/das7pad/redis-sharelatex.git#70ee5b4fb50d36f793b44715072872bbb29717bd",
     "request": "^2.88.0",
