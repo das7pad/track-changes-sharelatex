@@ -1,4 +1,4 @@
 track-changes
 --language=coffeescript
---node-version=12.16.3
+--node-version=12.17.0
 --dependencies=minio,mongo,redis_documentupdater,redis_lock
