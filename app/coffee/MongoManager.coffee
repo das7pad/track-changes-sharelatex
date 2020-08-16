@@ -2,7 +2,7 @@
 PackManager = require "./PackManager"
 async = require "async"
 _ = require "underscore"
-metrics = require 'metrics-sharelatex'
+metrics = require '@overleaf/metrics'
 logger = require 'logger-sharelatex'
 
 module.exports = MongoManager =

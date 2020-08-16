@@ -3,7 +3,7 @@ async = require "async"
 _ = require "underscore"
 {db, ObjectId} = require "./mongojs"
 fs = require "fs"
-Metrics = require "metrics-sharelatex"
+Metrics = require "@overleaf/metrics"
 Metrics.initialize("track-changes")
 logger = require "logger-sharelatex"
 logger.initialize("track-changes-packworker")

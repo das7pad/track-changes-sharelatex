@@ -20,7 +20,7 @@ describe "PackManager", ->
 			"./LockManager" : {}
 			"./MongoAWS": {}
 			"logger-sharelatex": { log: sinon.stub(), error: sinon.stub() }
-			'metrics-sharelatex': {inc: ()->}
+			'@overleaf/metrics': {inc: ()->}
 			"./ProjectIterator": require("../../../../app/js/ProjectIterator.js") # Cache for speed
 			"settings-sharelatex":
 				redis: lock: key_schema: {}

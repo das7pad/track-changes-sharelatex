@@ -1,4 +1,4 @@
-Metrics = require "metrics-sharelatex"
+Metrics = require "@overleaf/metrics"
 Metrics.initialize("track-changes")
 Settings = require "settings-sharelatex"
 logger = require "logger-sharelatex"

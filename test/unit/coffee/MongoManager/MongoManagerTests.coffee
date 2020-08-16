@@ -13,7 +13,7 @@ describe "MongoManager", ->
 		@MongoManager = SandboxedModule.require modulePath, requires:
 			"./mongojs" : { db: @db = {}, ObjectId: ObjectId }
 			"./PackManager" : @PackManager = {}
-			'metrics-sharelatex': {timeAsyncMethod: ()->}
+			'@overleaf/metrics': {timeAsyncMethod: ()->}
 			'logger-sharelatex': {log: ()->}
 		@callback = sinon.stub()
 		@doc_id = ObjectId().toString()

@@ -27,7 +27,7 @@ describe "MongoAWS", ->
 			"aws-sdk": @awssdk
 			"fs": @fs = {}
 			"./mongojs" : { db: @db = {}, ObjectId: ObjectId }
-			'metrics-sharelatex': {inc: ()->}
+			'@overleaf/metrics': {inc: ()->}
 
 		@project_id = ObjectId().toString()
 		@doc_id = ObjectId().toString()

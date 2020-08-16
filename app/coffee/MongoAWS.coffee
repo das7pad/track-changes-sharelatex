@@ -3,7 +3,7 @@ logger = require "logger-sharelatex"
 AWS = require 'aws-sdk'
 {db, ObjectId} = require "./mongojs"
 zlib = require "zlib"
-Metrics = require "metrics-sharelatex"
+Metrics = require "@overleaf/metrics"
 
 DAYS = 24 * 3600 * 1000 # one day in milliseconds
 s3 = new AWS.S3(
