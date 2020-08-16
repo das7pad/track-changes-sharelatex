@@ -101,6 +101,21 @@ module.exports = TrackChangesClient =
 			response.statusCode.should.equal 204
 			callback(error)
 
+	waitForS3: (done, retries=42) ->
+		if !Settings.trackchanges.s3.endpoint
+			return done()
+
+		request.get "#{Settings.trackchanges.s3.endpoint}/", (err, res) ->
+			if res && res.statusCode < 500
+				return done()
+
+			if retries == 0
+				return done(err or new Error("s3 returned #{res.statusCode}"))
+
+			setTimeout () ->
+				TrackChangesClient.waitForS3(done, --retries)
+			, 1000
+
 	getS3Doc: (project_id, doc_id, pack_id, callback = (error, body) ->) ->
 		params =
 			Bucket: S3_BUCKET
@@ -117,7 +132,7 @@ module.exports = TrackChangesClient =
 	removeS3Doc: (project_id, doc_id, callback = (error, res, body) ->) ->
 		params =
 			Bucket: S3_BUCKET
-			Prefix: project_id + "/changes-" + doc_id
+			Prefix: "#{project_id}/changes-#{doc_id}"
 
 		s3.listObjects params, (error, data) ->
 			return callback(error) if error?
