@@ -1,100 +1,130 @@
-settings = require "settings-sharelatex"
-logger = require "logger-sharelatex"
-AWS = require 'aws-sdk'
-{db, ObjectId} = require "./mongojs"
-zlib = require "zlib"
-Metrics = require "@overleaf/metrics"
+/*
+ * decaffeinate suggestions:
+ * DS101: Remove unnecessary use of Array.from
+ * DS102: Remove unnecessary code created because of implicit returns
+ * DS207: Consider shorter variations of null checks
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+let MongoAWS;
+const settings = require("settings-sharelatex");
+const logger = require("logger-sharelatex");
+const AWS = require('aws-sdk');
+const {db, ObjectId} = require("./mongojs");
+const zlib = require("zlib");
+const Metrics = require("@overleaf/metrics");
 
-DAYS = 24 * 3600 * 1000 # one day in milliseconds
-s3 = new AWS.S3(
-	accessKeyId: settings.trackchanges.s3.key
-	secretAccessKey: settings.trackchanges.s3.secret
-	endpoint: settings.trackchanges.s3.endpoint
-	s3ForcePathStyle: settings.trackchanges.s3.forcePathStyle
+const DAYS = 24 * 3600 * 1000; // one day in milliseconds
+const s3 = new AWS.S3({
+	accessKeyId: settings.trackchanges.s3.key,
+	secretAccessKey: settings.trackchanges.s3.secret,
+	endpoint: settings.trackchanges.s3.endpoint,
+	s3ForcePathStyle: settings.trackchanges.s3.forcePathStyle,
 	signatureVersion: 'v4'
-)
+});
 
-module.exports = MongoAWS =
+module.exports = (MongoAWS = {
 
-	archivePack: (project_id, doc_id, pack_id, callback = (error) ->) ->
+	archivePack(project_id, doc_id, pack_id, callback) {
 
-		query = {
-			_id: ObjectId(pack_id)
+		if (callback == null) { callback = function(error) {}; }
+		const query = {
+			_id: ObjectId(pack_id),
 			doc_id: ObjectId(doc_id)
-		}
+		};
 
-		return callback new Error("invalid project id") if not project_id?
-		return callback new Error("invalid doc id") if not doc_id?
-		return callback new Error("invalid pack id") if not pack_id?
+		if ((project_id == null)) { return callback(new Error("invalid project id")); }
+		if ((doc_id == null)) { return callback(new Error("invalid doc id")); }
+		if ((pack_id == null)) { return callback(new Error("invalid pack id")); }
 
-		logger.log {project_id, doc_id, pack_id}, "uploading data to s3"
+		logger.log({project_id, doc_id, pack_id}, "uploading data to s3");
 
-		db.docHistory.findOne query, (err, result) ->
-			return callback(err) if err?
-			return callback new Error("cannot find pack to send to s3") if not result?
-			return callback new Error("refusing to send pack with TTL to s3") if result.expiresAt?
-			uncompressedData = JSON.stringify(result)
-			if uncompressedData.indexOf("\u0000") != -1
-				error = new Error("null bytes found in upload")
-				logger.error err: error, project_id: project_id, doc_id: doc_id, pack_id: pack_id, error.message
-				return callback(error)
-			zlib.gzip uncompressedData, (err, buf) ->
-				logger.log {project_id, doc_id, pack_id, origSize: uncompressedData.length, newSize: buf.length}, "compressed pack"
-				return callback(err) if err?
+		return db.docHistory.findOne(query, function(err, result) {
+			if (err != null) { return callback(err); }
+			if ((result == null)) { return callback(new Error("cannot find pack to send to s3")); }
+			if (result.expiresAt != null) { return callback(new Error("refusing to send pack with TTL to s3")); }
+			const uncompressedData = JSON.stringify(result);
+			if (uncompressedData.indexOf("\u0000") !== -1) {
+				const error = new Error("null bytes found in upload");
+				logger.error({err: error, project_id, doc_id, pack_id}, error.message);
+				return callback(error);
+			}
+			return zlib.gzip(uncompressedData, function(err, buf) {
+				logger.log({project_id, doc_id, pack_id, origSize: uncompressedData.length, newSize: buf.length}, "compressed pack");
+				if (err != null) { return callback(err); }
 
-				params =
-					Body: buf
+				const params = {
+					Body: buf,
 					Bucket: settings.trackchanges.stores.doc_history,
-					Key: "#{project_id}/changes-#{doc_id}/pack-#{pack_id}"
+					Key: `${project_id}/changes-${doc_id}/pack-${pack_id}`
+				};
 
-				s3.putObject params, (error) ->
-					return callback(error) if error?
-					Metrics.inc("archive-pack")
-					logger.log {project_id, doc_id, pack_id}, "upload to s3 completed"
-					callback(null)
+				return s3.putObject(params, function(error) {
+					if (error != null) { return callback(error); }
+					Metrics.inc("archive-pack");
+					logger.log({project_id, doc_id, pack_id}, "upload to s3 completed");
+					return callback(null);
+				});
+			});
+		});
+	},
 
-	readArchivedPack: (project_id, doc_id, pack_id, _callback = (error, result) ->) ->
-		callback = (args...) ->
-			_callback(args...)
-			_callback = () ->
+	readArchivedPack(project_id, doc_id, pack_id, _callback) {
+		if (_callback == null) { _callback = function(error, result) {}; }
+		const callback = function(...args) {
+			_callback(...Array.from(args || []));
+			return _callback = function() {};
+		};
 
-		return callback new Error("invalid project id") if not project_id?
-		return callback new Error("invalid doc id") if not doc_id?
-		return callback new Error("invalid pack id") if not pack_id?
+		if ((project_id == null)) { return callback(new Error("invalid project id")); }
+		if ((doc_id == null)) { return callback(new Error("invalid doc id")); }
+		if ((pack_id == null)) { return callback(new Error("invalid pack id")); }
 
-		logger.log {project_id, doc_id, pack_id}, "downloading data from s3"
+		logger.log({project_id, doc_id, pack_id}, "downloading data from s3");
 
-		params =
+		const params = {
 			Bucket: settings.trackchanges.stores.doc_history,
-			Key: "#{project_id}/changes-#{doc_id}/pack-#{pack_id}"
+			Key: `${project_id}/changes-${doc_id}/pack-${pack_id}`
+		};
 
-		s3.getObject params, (error, response) ->
-			if error?
-				logger.log {project_id, doc_id, pack_id, error}, "download from s3 failed"
-				return callback(error) if error?
+		return s3.getObject(params, function(error, response) {
+			if (error != null) {
+				logger.log({project_id, doc_id, pack_id, error}, "download from s3 failed");
+				if (error != null) { return callback(error); }
+			}
 
-			logger.log {project_id, doc_id, pack_id}, "download from s3 completed"
-			zlib.gunzip response.Body, {encoding: 'utf-8'}, (error, data) ->
-				if error?
-					logger.log {project_id, doc_id, pack_id, err}, "error uncompressing gzip stream"
-					return callback(error)
+			logger.log({project_id, doc_id, pack_id}, "download from s3 completed");
+			return zlib.gunzip(response.Body, {encoding: 'utf-8'}, function(error, data) {
+				let object;
+				if (error != null) {
+					logger.log({project_id, doc_id, pack_id, err}, "error uncompressing gzip stream");
+					return callback(error);
+				}
 
-				try
-					object = JSON.parse data
-				catch e
-					return callback(e)
-				object._id = ObjectId(object._id)
-				object.doc_id = ObjectId(object.doc_id)
-				object.project_id = ObjectId(object.project_id)
-				for op in object.pack
-					op._id = ObjectId(op._id) if op._id?
-				callback null, object
+				try {
+					object = JSON.parse(data);
+				} catch (e) {
+					return callback(e);
+				}
+				object._id = ObjectId(object._id);
+				object.doc_id = ObjectId(object.doc_id);
+				object.project_id = ObjectId(object.project_id);
+				for (let op of Array.from(object.pack)) {
+					if (op._id != null) { op._id = ObjectId(op._id); }
+				}
+				return callback(null, object);
+			});
+		});
+	},
 
-	unArchivePack: (project_id, doc_id, pack_id, callback = (error) ->) ->
-		MongoAWS.readArchivedPack project_id, doc_id, pack_id, (err, object) ->
-			return callback(err) if err?
-			Metrics.inc("unarchive-pack")
-			# allow the object to expire, we can always retrieve it again
-			object.expiresAt = new Date(Date.now() + 7 * DAYS)
-			logger.log {project_id, doc_id, pack_id}, "inserting object from s3"
-			db.docHistory.insert object, callback
+	unArchivePack(project_id, doc_id, pack_id, callback) {
+		if (callback == null) { callback = function(error) {}; }
+		return MongoAWS.readArchivedPack(project_id, doc_id, pack_id, function(err, object) {
+			if (err != null) { return callback(err); }
+			Metrics.inc("unarchive-pack");
+			// allow the object to expire, we can always retrieve it again
+			object.expiresAt = new Date(Date.now() + (7 * DAYS));
+			logger.log({project_id, doc_id, pack_id}, "inserting object from s3");
+			return db.docHistory.insert(object, callback);
+		});
+	}
+});
