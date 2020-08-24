@@ -1,3 +1,10 @@
+/* eslint-disable
+    camelcase,
+    handle-callback-err,
+    no-unused-vars,
+*/
+// TODO: This file was created by bulk-decaffeinate.
+// Fix any style issues and re-enable lint.
 /*
  * decaffeinate suggestions:
  * DS101: Remove unnecessary use of Array.from
@@ -198,7 +205,7 @@ module.exports = (UpdatesManager = {
 			if (error != null) { return callback(error); }
 			return UpdatesManager._prepareProjectForUpdates(project_id, function(error, temporary) {
 				const jobs = [];
-				for (let doc_id of Array.from(doc_ids)) {
+				for (const doc_id of Array.from(doc_ids)) {
 					((doc_id => jobs.push(cb => UpdatesManager._processUncompressedUpdatesForDocWithLock(project_id, doc_id, temporary, cb))))(doc_id);
 				}
 				return async.parallelLimit(jobs, 5, callback);
@@ -266,7 +273,7 @@ module.exports = (UpdatesManager = {
 		if (callback == null) { callback = function(error, updates) {}; }
 		return UpdatesManager.processUncompressedUpdatesWithLock(project_id, doc_id, function(error) {
 			if (error != null) { return callback(error); }
-			//console.log "options", options
+			// console.log "options", options
 			return PackManager.getOpsByVersionRange(project_id, doc_id, options.from, options.to, function(error, updates) {
 				if (error != null) { return callback(error); }
 				return callback(null, updates);
@@ -300,19 +307,19 @@ module.exports = (UpdatesManager = {
 			return PackManager.makeProjectIterator(project_id, before, function(err, iterator) {
 				if (err != null) { return callback(err); }
 				// repeatedly get updates and pass them through the summariser to get an final output with user info
-				return async.whilst(() => //console.log "checking iterator.done", iterator.done()
+				return async.whilst(() => // console.log "checking iterator.done", iterator.done()
                 summarizedUpdates.length < options.min_count && !iterator.done()
 				, cb => iterator.next(function(err, partialUpdates) {
                     if (err != null) { return callback(err); }
-                    //logger.log {partialUpdates}, 'got partialUpdates'
-                    if (partialUpdates.length === 0) { return cb(); } //# FIXME should try to avoid this happening
+                    // logger.log {partialUpdates}, 'got partialUpdates'
+                    if (partialUpdates.length === 0) { return cb(); } // # FIXME should try to avoid this happening
                     nextBeforeTimestamp = partialUpdates[partialUpdates.length - 1].meta.end_ts;
                     // add the updates to the summary list
                     summarizedUpdates = UpdatesManager._summarizeUpdates(partialUpdates, summarizedUpdates);
                     return cb();
                 })
 				, () => // finally done all updates
-                //console.log 'summarized Updates', summarizedUpdates
+                // console.log 'summarized Updates', summarizedUpdates
                 UpdatesManager.fillSummarizedUserInfo(summarizedUpdates, function(err, results) {
                     if (err != null) { return callback(err); }
                     return callback(null, results,	!iterator.done() ? nextBeforeTimestamp : undefined);
@@ -325,7 +332,7 @@ module.exports = (UpdatesManager = {
 		if (callback == null) { callback = function(error, fetchedUserInfo) {}; }
 		const jobs = [];
 		const fetchedUserInfo = {};
-		for (let user_id in users) {
+		for (const user_id in users) {
 			((user_id => jobs.push(callback => WebApiManager.getUserInfo(user_id, function(error, userInfo) {
                 if (error != null) { return callback(error); }
                 fetchedUserInfo[user_id] = userInfo;
@@ -412,7 +419,7 @@ module.exports = (UpdatesManager = {
 		if (existingSummarizedUpdates == null) { existingSummarizedUpdates = []; }
 		const summarizedUpdates = existingSummarizedUpdates.slice();
 		let previousUpdateWasBigDelete = false;
-		for (let update of Array.from(updates)) {
+		for (const update of Array.from(updates)) {
 			var doc_id;
 			const earliestUpdate = summarizedUpdates[summarizedUpdates.length - 1];
 			let shouldConcat = false;
@@ -432,7 +439,7 @@ module.exports = (UpdatesManager = {
 			}
 
 			let isBigDelete = false;
-			for (let op of Array.from(update.op || [])) {
+			for (const op of Array.from(update.op || [])) {
 				if ((op.d != null) && (op.d.length > this.SPLIT_ON_DELETE_SIZE)) {
 					isBigDelete = true;
 				}

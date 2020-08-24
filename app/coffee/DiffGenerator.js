@@ -1,3 +1,10 @@
+/* eslint-disable
+    camelcase,
+    no-proto,
+    no-unused-vars,
+*/
+// TODO: This file was created by bulk-decaffeinate.
+// Fix any style issues and re-enable lint.
 /*
  * decaffeinate suggestions:
  * DS101: Remove unnecessary use of Array.from
@@ -75,7 +82,7 @@ module.exports = (DiffGenerator = {
 	},
 
 	rewindUpdates(content, updates) {
-		for (let update of Array.from(updates.reverse())) {
+		for (const update of Array.from(updates.reverse())) {
 			try {
 				content = DiffGenerator.rewindUpdate(content, update);
 			} catch (e) {
@@ -88,7 +95,7 @@ module.exports = (DiffGenerator = {
 
 	buildDiff(initialContent, updates) {
 		let diff = [ {u: initialContent} ];
-		for (let update of Array.from(updates)) {
+		for (const update of Array.from(updates)) {
 			diff = DiffGenerator.applyUpdateToDiff(diff, update);
 		}
 		diff = DiffGenerator.compressDiff(diff);
@@ -97,7 +104,7 @@ module.exports = (DiffGenerator = {
 
 	compressDiff(diff) {
 		const newDiff = [];
-		for (let part of Array.from(diff)) {
+		for (const part of Array.from(diff)) {
 			const lastPart = newDiff[newDiff.length - 1];
 			if ((lastPart != null) && ((lastPart.meta != null ? lastPart.meta.user : undefined) != null) && ((part.meta != null ? part.meta.user : undefined) != null)) {
 				if ((lastPart.i != null) && (part.i != null) && (lastPart.meta.user.id === part.meta.user.id)) {
@@ -142,7 +149,7 @@ module.exports = (DiffGenerator = {
 	},
 
 	applyUpdateToDiff(diff, update) {
-		for (let op of Array.from(update.op)) {
+		for (const op of Array.from(update.op)) {
 			if (op.broken !== true) {
 				diff = DiffGenerator.applyOpToDiff(diff, op, update.meta);
 			}
