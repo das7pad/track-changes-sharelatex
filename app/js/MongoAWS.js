@@ -25,7 +25,7 @@ const s3 = new AWS.S3({
   accessKeyId: settings.trackchanges.s3.key,
   secretAccessKey: settings.trackchanges.s3.secret,
   endpoint: settings.trackchanges.s3.endpoint,
-  s3ForcePathStyle: settings.trackchanges.s3.forcePathStyle,
+  s3ForcePathStyle: settings.trackchanges.s3.pathStyle,
   signatureVersion: 'v4'
 })
 

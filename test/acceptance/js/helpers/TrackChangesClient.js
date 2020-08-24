@@ -26,7 +26,7 @@ const s3 = new aws.S3({
   accessKeyId: Settings.trackchanges.s3.key,
   secretAccessKey: Settings.trackchanges.s3.secret,
   endpoint: Settings.trackchanges.s3.endpoint,
-  s3ForcePathStyle: Settings.trackchanges.s3.forcePathStyle,
+  s3ForcePathStyle: Settings.trackchanges.s3.pathStyle,
   signatureVersion: 'v4'
 })
 const S3_BUCKET = Settings.trackchanges.stores.doc_history
