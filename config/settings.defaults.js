@@ -1,8 +1,3 @@
-/* eslint-disable
-    camelcase,
-*/
-// TODO: This file was created by bulk-decaffeinate.
-// Fix any style issues and re-enable lint.
 const Path = require('path')
 const TMP_DIR =
   process.env.TMP_PATH || Path.resolve(Path.join(__dirname, '../../', 'tmp'))
@@ -41,37 +36,37 @@ module.exports = {
   },
   redis: {
     lock: {
-      port: process.env.LOCK_REDIS_PORT || process.env.REDIS_PORT || '6379',
       host:
         process.env.LOCK_REDIS_HOST || process.env.REDIS_HOST || 'localhost',
+      port: process.env.LOCK_REDIS_PORT || process.env.REDIS_PORT || '6379',
       password:
         process.env.LOCK_REDIS_PASSWORD || process.env.REDIS_PASSWORD || '',
       key_schema: {
-        historyLock({ doc_id }) {
-          return `HistoryLock:{${doc_id}}`
+        historyLock({ doc_id: docId }) {
+          return `HistoryLock:{${docId}}`
         },
-        historyIndexLock({ project_id }) {
-          return `HistoryIndexLock:{${project_id}}`
+        historyIndexLock({ project_id: projectId }) {
+          return `HistoryIndexLock:{${projectId}}`
         }
       }
     },
     history: {
-      port:
-        process.env.DOC_UPDATER_REDIS_PORT || process.env.REDIS_PORT || '6379',
       host:
         process.env.DOC_UPDATER_REDIS_HOST ||
         process.env.REDIS_HOST ||
         'localhost',
+      port:
+        process.env.DOC_UPDATER_REDIS_PORT || process.env.REDIS_PORT || '6379',
       password:
         process.env.DOC_UPDATER_REDIS_PASSWORD ||
         process.env.REDIS_PASSWORD ||
         '',
       key_schema: {
-        uncompressedHistoryOps({ doc_id }) {
-          return `UncompressedHistoryOps:{${doc_id}}`
+        uncompressedHistoryOps({ doc_id: docId }) {
+          return `UncompressedHistoryOps:{${docId}}`
         },
-        docsWithHistoryOps({ project_id }) {
-          return `DocsWithHistoryOps:{${project_id}}`
+        docsWithHistoryOps({ project_id: projectId }) {
+          return `DocsWithHistoryOps:{${projectId}}`
         }
       }
     }
