@@ -14,7 +14,6 @@
  */
 let LIMIT, pending
 let project_id, doc_id
-const Settings = require('settings-sharelatex')
 const async = require('async')
 const _ = require('underscore')
 const { db, ObjectId } = require('./mongojs')
@@ -23,9 +22,6 @@ const Metrics = require('@overleaf/metrics')
 Metrics.initialize('track-changes')
 const logger = require('logger-sharelatex')
 logger.initialize('track-changes-packworker')
-if ((Settings.sentry != null ? Settings.sentry.dsn : undefined) != null) {
-  logger.initializeErrorReporting(Settings.sentry.dsn, Settings.sentry.options)
-}
 
 const DAYS = 24 * 3600 * 1000
 
