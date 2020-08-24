@@ -2,7 +2,6 @@
     camelcase,
     handle-callback-err,
     no-return-assign,
-    no-undef,
 */
 // TODO: This file was created by bulk-decaffeinate.
 // Fix any style issues and re-enable lint.
@@ -146,7 +145,7 @@ module.exports = MongoAWS = {
         let object
         if (error != null) {
           logger.log(
-            { project_id, doc_id, pack_id, err },
+            { project_id, doc_id, pack_id, err: error },
             'error uncompressing gzip stream'
           )
           return callback(error)
