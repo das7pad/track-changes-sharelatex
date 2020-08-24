@@ -36,19 +36,20 @@ describe('Locking document', function () {
             () =>
               // now we create a new lock B and try to release A
               LockManager.runWithLock(
-                'doc123', // try to release lock A to see if it wipes out lock B
+                'doc123',
                 (releaseB) => {
                   return releaseA()
-                },
+                }, // try to release lock A to see if it wipes out lock B
                 (error) => {}
               ),
+
             // we never release lock B so nothing should happen here
             1500
           )
         }, // enough time to wait until the lock has expired
-        (
-          error // we get here after trying to release lock A
-        ) => done()
+        (error) =>
+          // we get here after trying to release lock A
+          done()
       )
       return null
     })

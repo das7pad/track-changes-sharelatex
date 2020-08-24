@@ -279,9 +279,7 @@ module.exports = TrackChangesClient = {
       params = {
         Bucket: S3_BUCKET,
         Delete: {
-          Objects: data.Contents.map((s3object) => ({
-            Key: s3object.Key
-          }))
+          Objects: data.Contents.map((s3object) => ({ Key: s3object.Key }))
         }
       }
 

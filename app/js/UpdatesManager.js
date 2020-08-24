@@ -36,7 +36,7 @@ module.exports = UpdatesManager = {
     temporary,
     callback
   ) {
-    let i, op
+    let i
     if (callback == null) {
       callback = function (error) {}
     }
@@ -47,7 +47,7 @@ module.exports = UpdatesManager = {
 
     // check that ops are in the correct order
     for (i = 0; i < rawUpdates.length; i++) {
-      op = rawUpdates[i]
+      const op = rawUpdates[i]
       if (i > 0) {
         const thisVersion = op != null ? op.v : undefined
         const prevVersion = __guard__(rawUpdates[i - 1], (x) => x.v)
@@ -81,6 +81,7 @@ module.exports = UpdatesManager = {
       // as 'null' (for example if the previous compressed update has
       // been archived).  In this case it can still pass back the
       // lastVersion from the update to allow us to check consistency.
+      let op
       if (error != null) {
         return callback(error)
       }
@@ -588,6 +589,7 @@ module.exports = UpdatesManager = {
             () =>
               // console.log "checking iterator.done", iterator.done()
               summarizedUpdates.length < options.min_count && !iterator.done(),
+
             (cb) =>
               iterator.next(function (err, partialUpdates) {
                 if (err != null) {
@@ -606,6 +608,7 @@ module.exports = UpdatesManager = {
                 )
                 return cb()
               }),
+
             () =>
               // finally done all updates
               // console.log 'summarized Updates', summarizedUpdates

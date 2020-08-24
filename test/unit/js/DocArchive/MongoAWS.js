@@ -26,6 +26,7 @@ describe('MongoAWS', function () {
     this.awssdk = { S3: sinon.stub().returns(this.s3) }
 
     this.MongoAWS = SandboxedModule.require(modulePath, {
+      singleOnly: true,
       requires: {
         'settings-sharelatex': (this.settings = {
           trackchanges: {

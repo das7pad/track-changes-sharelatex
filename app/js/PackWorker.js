@@ -160,7 +160,6 @@ const processUpdates = (pending) =>
       return finish()
     }
   )
-
 // find the packs which can be archived
 
 const ObjectIdFromDate = function (date) {

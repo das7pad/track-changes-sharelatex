@@ -222,7 +222,7 @@ module.exports = PackManager = {
       if (err != null) {
         return callback(err)
       }
-      Metrics.inc('insert-pack-' + (temporary ? 'temporary' : 'permanent'))
+      Metrics.inc(`insert-pack-${temporary ? 'temporary' : 'permanent'}`)
       if (temporary) {
         return callback()
       } else {
@@ -272,7 +272,7 @@ module.exports = PackManager = {
       { project_id, doc_id, lastUpdate, newUpdates },
       'appending updates to existing pack'
     )
-    Metrics.inc('append-pack-' + (temporary ? 'temporary' : 'permanent'))
+    Metrics.inc(`append-pack-${temporary ? 'temporary' : 'permanent'}`)
     return db.docHistory.findAndModify(
       { query, update, new: true, fields: { meta: 1, v_end: 1 } },
       callback

@@ -286,7 +286,7 @@ describe('Appending doc ops to the history', function () {
           meta: { ts: Date.now(), user_id: this.user_id },
           v: i
         })
-        this.expectedOp[0].i = 'a' + this.expectedOp[0].i
+        this.expectedOp[0].i = `a${this.expectedOp[0].i}`
       }
 
       TrackChangesClient.pushRawUpdates(
