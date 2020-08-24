@@ -1,3 +1,10 @@
+/* eslint-disable
+    mocha/no-identical-title,
+    no-return-assign,
+    no-unused-vars,
+*/
+// TODO: This file was created by bulk-decaffeinate.
+// Fix any style issues and re-enable lint.
 /*
  * decaffeinate suggestions:
  * DS102: Remove unnecessary code created because of implicit returns
@@ -42,7 +49,7 @@ describe("PackManager", function() {
 		return this.PackManager.MAX_COUNT = 512;
 	});
 
-	afterEach(() => tk.reset());
+	afterEach(function() { return tk.reset(); });
 
 	describe("insertCompressedUpdates", function() {
 		beforeEach(function() {
@@ -199,7 +206,7 @@ describe("PackManager", function() {
 			});
 		});
 
-		describe("flushCompressedUpdates", () => describe("when there is no previous update",  function() {
+		describe("flushCompressedUpdates", function() { return describe("when there is no previous update",  function() {
             beforeEach(function() {
                 return this.PackManager.flushCompressedUpdates(this.project_id, this.doc_id, null, this.newUpdates, true, this.callback);
             });
@@ -226,7 +233,7 @@ describe("PackManager", function() {
                     return this.callback.called.should.equal(true);
                 });
             });
-        }));
+        }); });
 
 		describe("when there is a recent previous update in mongo that expires", function() {
 			beforeEach(function() {
@@ -456,9 +463,9 @@ describe("PackManager", function() {
 
 
 function __range__(left, right, inclusive) {
-  let range = [];
-  let ascending = left < right;
-  let end = !inclusive ? right : ascending ? right + 1 : right - 1;
+  const range = [];
+  const ascending = left < right;
+  const end = !inclusive ? right : ascending ? right + 1 : right - 1;
   for (let i = left; ascending ? i < end : i > end; ascending ? i++ : i--) {
     range.push(i);
   }
