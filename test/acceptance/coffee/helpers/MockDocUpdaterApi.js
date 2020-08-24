@@ -1,3 +1,10 @@
+/* eslint-disable
+    camelcase,
+    handle-callback-err,
+    no-undef,
+*/
+// TODO: This file was created by bulk-decaffeinate.
+// Fix any style issues and re-enable lint.
 /*
  * decaffeinate suggestions:
  * DS102: Remove unnecessary code created because of implicit returns
@@ -26,7 +33,7 @@ module.exports = (MockDocUpdaterApi = {
 
 	run() {
 		app.get("/project/:project_id/doc/:doc_id", (req, res, next) => {
-			return this.getDoc(req.params.project_id, req.params.doc_id, function(error, doc) {
+			return this.getDoc(req.params.project_id, req.params.doc_id, (error, doc) => {
 				if (error != null) {
 					res.sendStatus(500);
 				}
@@ -39,7 +46,7 @@ module.exports = (MockDocUpdaterApi = {
 		});
 
 		app.post("/project/:project_id/doc/:doc_id", bodyParser(), (req, res, next) => {
-			return this.setDoc(req.params.project_id, req.params.doc_id, req.body.lines, req.body.user_id, req.body.undoing, function(errr, doc) {
+			return this.setDoc(req.params.project_id, req.params.doc_id, req.body.lines, req.body.user_id, req.body.undoing, (errr, doc) => {
 				if (typeof error !== 'undefined' && error !== null) {
 					return res.sendStatus(500);
 				} else {
@@ -48,9 +55,9 @@ module.exports = (MockDocUpdaterApi = {
 			});
 		});
 
-		return app.listen(3003, function(error) {
+		return app.listen(3003, (error) => {
 			if (error != null) { throw error; }
-	}).on("error", function(error) {
+	}).on("error", (error) => {
 			console.error("error starting MockDocUpdaterApi:", error.message);
 			return process.exit(1);
 		});
