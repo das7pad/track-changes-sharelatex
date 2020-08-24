@@ -38,7 +38,6 @@
   "devDependencies": {
     "chai": "~4.1.1",
     "cli": "^1.0.1",
-    "coffee-script": "^1.7.1",
     "mocha": "^4.0.1",
     "sandboxed-module": "~0.3.0",
     "sinon": "~3.2.1",
