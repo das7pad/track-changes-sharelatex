@@ -61,18 +61,91 @@ clean_docker_images:
 
 clean:
 
-	rm -f app.js
-	rm -f app.map
-	rm -rf app/js
-	rm -rf test/acceptance/js
-	rm -rf test/load/js
-	rm -rf test/smoke/js
-	rm -rf test/unit/js
-
 test: lint
 lint:
 test: format
 format:
+
+LINT_RUNNER_IMAGE ?= \
+	$(SHARELATEX_DOCKER_REPOS)/lint-runner:2.0.1
+LINT_RUNNER = \
+	docker run \
+		--rm \
+		--tty \
+		--volume $(PWD):$(PWD) \
+		--workdir $(PWD) \
+		--user $(SUDO_UID):$(SUDO_GID) \
+		$(LINT_RUNNER_IMAGE)
+
+GIT_PREVIOUS_SUCCESSFUL_COMMIT ?= $(shell \
+	$(git) rev-parse --abbrev-ref --symbolic-full-name dev@{u} 2>/dev/null \
+	| grep -e /dev \
+	|| echo origin/dev)
+
+NEED_FULL_LINT ?= \
+	$(shell $(git) diff $(GIT_PREVIOUS_SUCCESSFUL_COMMIT) --name-only \
+			| grep --max-count=1 \
+				-e .eslintignore \
+				-e .eslintrc \
+				-e buildscript.txt \
+	)
+
+ifeq (,$(NEED_FULL_LINT))
+lint: lint_partial
+else
+lint: lint_full
+endif
+
+RUN_LINT ?= $(LINT_RUNNER) eslint
+lint_full:
+	$(RUN_LINT) .
+
+GIT_DIFF_CMD_FORMAT ?= \
+	$(git) diff $(GIT_PREVIOUS_SUCCESSFUL_COMMIT) --name-only \
+	| grep --invert-match \
+		-e vendor \
+	| grep \
+		-e '\.js$$' \
+	| sed 's|^|$(PWD)/|'
+
+FILES_FOR_FORMAT ?= $(wildcard $(shell $(GIT_DIFF_CMD_FORMAT)))
+FILES_FOR_LINT ?= $(FILES_FOR_FORMAT)
+
+lint_partial:
+ifneq (,$(FILES_FOR_LINT))
+	$(RUN_LINT) $(FILES_FOR_LINT)
+endif
+
+NEED_FULL_FORMAT ?= \
+	$(shell $(git) diff $(GIT_PREVIOUS_SUCCESSFUL_COMMIT) --name-only \
+			| grep --max-count=1 \
+				-e .prettierignore \
+				-e .prettierrc \
+				-e buildscript.txt \
+	)
+
+ifeq (,$(NEED_FULL_FORMAT))
+format: format_partial
+format_fix: format_fix_partial
+else
+format: format_full
+format_fix: format_fix_full
+endif
+
+RUN_FORMAT ?= $(LINT_RUNNER) prettier-eslint
+format_full:
+	$(RUN_FORMAT) '$(PWD)/**/*.{js,less}' --list-different
+format_fix_full:
+	$(RUN_FORMAT) '$(PWD)/**/*.{js,less}' --write
+
+format_partial:
+ifneq (,$(FILES_FOR_LINT))
+	$(RUN_FORMAT) $(FILES_FOR_FORMAT) --list-different
+endif
+format_fix_partial:
+ifneq (,$(FILES_FOR_LINT))
+	$(RUN_FORMAT) $(FILES_FOR_FORMAT) --write
+endif
 
 UNIT_TEST_DOCKER_COMPOSE ?= \
 	COMPOSE_PROJECT_NAME=unit_test_$(BUILD_DIR_NAME) $(DOCKER_COMPOSE)
@@ -110,47 +183,7 @@ clean_test_acceptance: clean_test_acceptance_app
 clean_test_acceptance_app:
 	$(ACCEPTANCE_TEST_DOCKER_COMPOSE) down --volumes --timeout 0
 
-COFFEE := npx coffee
-
-build_app: compile_full
-
-compile_full: compile_app
-compile_full: compile_tests
-
-COFFEE_DIRS_TESTS := $(wildcard test/*/coffee)
-COMPILE_TESTS := $(addprefix compile/,$(COFFEE_DIRS_TESTS))
-compile_app: app.js compile/app/coffee
-compile_tests: $(COMPILE_TESTS)
-
-compile/app/coffee $(COMPILE_TESTS): compile/%coffee:
-	$(COFFEE) --output $*js --compile $*coffee
-
-COFFEE_FILES := $(shell find app/coffee $(COFFEE_DIRS_TESTS) -name '*.coffee')
-JS_FILES := app.js $(subst /coffee,/js,$(subst .coffee,.js,$(COFFEE_FILES)))
-compile: $(JS_FILES)
-
-app.js: app.coffee
-	$(COFFEE) --compile $<
-
-app/js/%.js: app/coffee/%.coffee
-	@mkdir -p $(@D)
-	$(COFFEE) --compile -o $(@D) $<
-
-test/acceptance/js/%.js: test/acceptance/coffee/%.coffee
-	@mkdir -p $(@D)
-	$(COFFEE) --compile -o $(@D) $<
-
-test/load/js/%.js: test/load/coffee/%.coffee
-	@mkdir -p $(@D)
-	$(COFFEE) --compile -o $(@D) $<
-
-test/smoke/js/%.js: test/smoke/coffee/%.coffee
-	@mkdir -p $(@D)
-	$(COFFEE) --compile -o $(@D) $<
-
-test/unit/js/%.js: test/unit/coffee/%.coffee
-	@mkdir -p $(@D)
-	$(COFFEE) --compile -o $(@D) $<
+build_app:
 
 build_dev_deps: clean_build_artifacts
 	docker build \
@@ -186,8 +219,6 @@ build_prod: clean_build_artifacts
 		$(IMAGE_CI)-dev \
 			--create \
 			--gzip \
-			app.js \
-			app/js \
 			app/lib \
 			config \
 		> build_artifacts.tar.gz

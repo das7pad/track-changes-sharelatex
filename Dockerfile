@@ -20,6 +20,4 @@ FROM dev-deps as dev
 
 COPY . /app
 
-RUN /docker_cleanup.sh make build_app
-
 USER node

@@ -42,17 +42,15 @@
 
 #######
 # app #
-!/app.coffee
-!/app/coffee
 !/app/lib
 
-!/test/acceptance/coffee
 !/test/acceptance/config
 !/test/acceptance/fixtures
+!/test/acceptance/js
 !/test/acceptance/libs
 !/test/fixtures
-!/test/smoke/coffee
-!/test/unit/coffee
+!/test/smoke/js
+!/test/unit/js
 # app #
 #######
 

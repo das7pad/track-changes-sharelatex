@@ -1,4 +1,5 @@
 track-changes
---language=coffeescript
+--language=es
 --node-version=12.18.3
 --dependencies=minio,mongo,redis_documentupdater,redis_lock
+--lint-runner-version=2.0.1
