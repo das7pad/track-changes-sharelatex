@@ -20,7 +20,7 @@
   "dependencies": {
     "@overleaf/metrics": "https://github.com/das7pad/metrics-sharelatex/archive/314238a72d2d91d3b912f4deab4a8be97a99552f.tar.gz",
     "async": "~0.2.10",
-    "aws-sdk": "^2.102.0",
+    "aws-sdk": "^2.739.0",
     "body-parser": "^1.19.0",
     "bson": "^0.4.20",
     "express": "^4.17.1",
