@@ -42,6 +42,8 @@
 
 #######
 # app #
+!/app.js
+!/app/js
 !/app/lib
 
 !/test/acceptance/config

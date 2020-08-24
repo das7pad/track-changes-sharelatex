@@ -219,6 +219,8 @@ build_prod: clean_build_artifacts
 		$(IMAGE_CI)-dev \
 			--create \
 			--gzip \
+			app.js \
+			app/js \
 			app/lib \
 			config \
 		> build_artifacts.tar.gz
