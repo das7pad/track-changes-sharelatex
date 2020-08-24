@@ -1,8 +1,7 @@
 **.swp
 node_modules/
-app/js
-app.js
-**/*.map
-test/unit/js
-test/acceptance/js
 forever/
+*.js.map
+
+# managed by dev-environment$ bin/update_build_scripts
+.npmrc
